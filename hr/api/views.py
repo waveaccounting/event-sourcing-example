@@ -24,10 +24,10 @@ class ExpenseAPIView(APIView):
     def _crud(self, request, method):
         sequence=request.data.sequence
 
-        expenseEventFactory = EventFactory(ExpenseValidator)
+        expense_event_factory = EventFactory(ExpenseValidator)
 
         try:
-            event = expenseEventFactory(sequence, request.data, method)
+            event = expense_event_factory(sequence, request.data, method)
         except InvalidEvent:
             return Response('You broke it', status=status.HTTP_400_BAD_REQUEST)
 
