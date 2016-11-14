@@ -44,6 +44,12 @@ class ExpenseAPIViewTestCase(TestCase):
     def delete_payload(self, payload):
         return self._apply_payload_with_method("delete", payload)
 
+    def _create_inital_expense_event_in_log(self):
+        # TODO I am not sure I love creating this with the api. It could cause
+        # other tests to fail.
+        response = self.post_payload(create_expense_fixture)
+        self.assertEqual(201, response.status_code)
+
     def test_post__simple_create(self):
         response = self.post_payload(create_expense_fixture)
         self.assertEqual(201, response.status_code)
@@ -53,8 +59,7 @@ class ExpenseAPIViewTestCase(TestCase):
         self.assertEqual(400, response.status_code)
 
     def test_put__simple_update(self):
-        # TODO set up previous create record.
-        self.fail("Need to have existing create record in the event log")
+        self._create_inital_expense_event_in_log()
 
         response = self.put_payload(update_expense_fixture)
 
@@ -69,8 +74,7 @@ class ExpenseAPIViewTestCase(TestCase):
         self.assertEqual(400, response.status_code)
 
     def test_delete__simple_delete(self):
-        # TODO set up previous create record.
-        self.fail("Need to have existing create record in the event log")
+        self._create_inital_expense_event_in_log()
 
         response = self.delete_payload(delete_expense_fixture)
 
