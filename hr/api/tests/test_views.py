@@ -23,8 +23,8 @@ class ExpenseAPIView(TestCase):
 
         response = self.post_payload(payload)
 
-        self.assertEqual(201, resonse.status_code)
+        self.assertEqual(201, response.status_code)
 
     def test_post__bad_data(self):
         response = self.post_payload({})
-        self.assertEqual(400, resonse.status_code)
+        self.assertEqual(400, response.status_code)
