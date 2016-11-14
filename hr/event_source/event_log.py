@@ -10,10 +10,13 @@ from expense.services import (
 
 
 class Event(object):
+<<<<<<< HEAD
     def __init__(self, sequence, method, payload, modelName):
+=======
+    def __init__(self, sequence,  method, payload):
+>>>>>>> origin/master
         # TODO  validate these parameters are legit
         self.method = method
-        self.modelName = modelName
         self.payload = payload
         self.sequence = sequence
 
@@ -28,11 +31,15 @@ class EventFactory(object):
 
 
 class EventLog(object):
+<<<<<<< HEAD
     def __init__(self, event_log_type):
         self.event_log_type = event_log_type
+=======
+    def __init__(self, model):
+        self.model = model
+>>>>>>> origin/master
 
     def publish(self, event):
-        # route events to logs by event type
         # ensure crud is legit (state machine is able to C/U/D)
         # Write to db
 

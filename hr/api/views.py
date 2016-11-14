@@ -9,13 +9,13 @@ from event_source.event_log import EventLog, EventFactory
 
 class ExpenseAPIView(APIView):
     def post(self, request):
-        self._crud(request, EventMethod.CREATE)
+        return self._crud(request, EventMethod.CREATE)
 
     def put(self, request):
-        self._crud(request, EventMethod.UPDATE)
+        return self._crud(request, EventMethod.UPDATE)
 
     def delete(self, request):
-        self._crud(request, EventMethod.DELETE)
+        return self._crud(request, EventMethod.DELETE)
 
     def get(self, request):
         pass  # TODO
@@ -27,11 +27,12 @@ class ExpenseAPIView(APIView):
 
         try:
             event = expense_event_factory(sequence, request.data, method)
-        except InvalidEvent:
+        except (KeyError, InvalidEvent):
             return Response('You broke it', status=400)
 
         try:
-            EventLog.publish(event)
+            eventLog = EventLog('Expense')  # Make this something more smarter
+            eventLog.publish(event)
         except EventlogPreconditionFailure:
             return Response('You broke it', status=400)
 

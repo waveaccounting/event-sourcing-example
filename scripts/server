@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd hr
+python manage.py runserver
