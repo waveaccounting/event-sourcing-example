@@ -23,7 +23,8 @@ delete_expense_fixture = {
 }
 
 
-class ExpenseAPIView(TestCase):
+class ExpenseAPIViewTestCase(TestCase):
+    """This TestCase is integrations tests for the expense api"""
     def setUp(self):
         self.c = Client()
 
@@ -86,6 +87,6 @@ class ExpenseAPIView(TestCase):
         response = self.delete_payload({})
         self.assertEqual(400, response.status_code)
 
-    def test_put__does_not_have_previous_create(self):
+    def test_delete__does_not_have_previous_create(self):
         response = self.delete_payload(delete_expense_fixture)
         self.assertEqual(400, response.status_code)
