@@ -1,9 +1,9 @@
 from django.conf.urls import url
 from django.contrib import admin
 
-from api.views import ExpenseApiView
+from api.views import ExpenseAPIView, MonthlyExpenseReportAPIView
 
 urlpatterns = [
-    url(r'^expense/', ExpenseApiView.as_view()),
-    url(r'^expense-report/', MonthlyExpenseReportApiView.as_view()),
+    url(r'^expense/', ExpenseAPIView.as_view()),
+    url(r'^expense-report/', MonthlyExpenseReportAPIView.as_view()),
 ]

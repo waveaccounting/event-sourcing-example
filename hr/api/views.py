@@ -1,6 +1,5 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.status import status
 
 from api.validators import ExpenseValidator
 from event_source.exceptions import InvalidEvent, EventlogPreconditionFailure
@@ -29,16 +28,16 @@ class ExpenseAPIView(APIView):
         try:
             event = expenseEventFactory(sequence, request.data, method)
         except InvalidEvent:
-            return Response('You broke it', status=status.HTTP_400_BAD_REQUEST)
+            return Response('You broke it', status=400)
 
         try:
             EventLog.publish(event)
         except EventlogPreconditionFailure:
-            return Response('You broke it', status=status.HTTP_400_BAD_REQUEST)
+            return Response('You broke it', status=400)
 
-        return Response('Good job', status=status.HTTP_201_CREATED)
+        return Response('Good job', status=201)
 
 
-class MonthlyReportAPIView(APIView):
+class MonthlyExpenseReportAPIView(APIView):
     def get(self, request, format=None):
         pass
