@@ -6,6 +6,13 @@ class ExpenseAPIView(TestCase):
     def setUp(self):
         self.c = Client()
 
+    def post_payload(self, payload):
+        return self.c.post(
+            reverse("event_create"),
+            payload,
+            content_type="application/json"
+        )
+
     def test_post__simple_create(self):
         payload = {
             "previous_event": None,
@@ -14,9 +21,10 @@ class ExpenseAPIView(TestCase):
             "date": "2016-11-14T12:34:56",
         }
 
-        response = self.c.post(reverse("event_create"), payload)  # TODO json encoding?
+        response = self.post_payload(payload)
 
-        self.assertEqual(200, resonse.status_code)
+        self.assertEqual(201, resonse.status_code)
 
-
-
+    def test_post__bad_data(self):
+        response = self.post_payload({})
+        self.assertEqual(400, resonse.status_code)
