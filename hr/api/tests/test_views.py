@@ -15,10 +15,10 @@ class ExpenseAPIView(TestCase):
 
     def test_post__simple_create(self):
         payload = {
-            "previous_event": None,
-            "name": "pycon ticket",
             "amount": "150.0000",
             "date": "2016-11-14T12:34:56",
+            "name": "pycon ticket",
+            "sequence": 1,
         }
 
         response = self.post_payload(payload)
