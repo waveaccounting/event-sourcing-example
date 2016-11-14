@@ -9,7 +9,7 @@ class ExpenseAPIView(TestCase):
     def post_payload(self, payload):
         return self.c.post(
             reverse("expense-api"),
-            payload,
+            data=payload,
             content_type="application/json"
         )
 
