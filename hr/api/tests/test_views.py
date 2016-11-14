@@ -63,6 +63,12 @@ class ExpenseAPIViewTestCase(TestCase):
         response = self.put_payload(update_expense_fixture)
         self.assertEqual(201, response.status_code)
 
+    def _mark_expense_as_deleted_event_in_log(self):
+        # TODO I am not sure I love creating this with the api. It could cause
+        # other tests to fail.
+        response = self.delete_payload(delete_expense_fixture)
+        self.assertEqual(201, response.status_code)
+
     def test_post__simple_create(self):
         response = self.post_payload(create_expense_fixture)
         self.assertEqual(201, response.status_code)
@@ -159,3 +165,30 @@ class ExpenseAPIViewTestCase(TestCase):
 
         self.assertEqual(200, response.status_code)
         self.assertDictEqual(expected, response.data)
+
+    def test_get__at_time__before_delete(self):
+        expected = {
+            "amount": "150.0000",
+            "date": "2016-11-14T12:34:56",
+            "name": "pycon ticket",
+            "sequence": 1,
+        }  # ??? Anything else?
+
+        self._create_inital_expense_event_in_log()
+        self._mark_expense_as_deleted_event_in_log()
+
+        # Get the state of the expense before it was updated
+        response = self.get_expense({"datetime": "2016-11-14T12:35:00"})
+
+        self.assertEqual(200, response.status_code)
+        self.assertDictEqual(expected, response.data)
+
+    def test_get__at_time__after_delete(self):
+        self._create_inital_expense_event_in_log()
+        self._mark_expense_as_deleted_event_in_log()
+
+        # Get the state of the expense before it was updated
+        response = self.get_expense({"datetime": "2016-12-14T12:50:00"})
+
+        # ??? Should this a different status code?
+        self.assertEqual(400, response.status_code)
