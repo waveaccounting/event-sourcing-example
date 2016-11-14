@@ -1,8 +1,7 @@
 class Event(object):
-    def __init__(self, sequence,  method, payload, modelName):
+    def __init__(self, sequence,  method, payload):
         # TODO  validate these parameters are legit
         self.method = method
-        self.modelName = modelName
         self.payload = payload
         self.sequence = sequence
 
@@ -17,8 +16,10 @@ class EventFactory(object):
 
 
 class EventLog(object):
+    def __init__(self, model):
+        self.model = model
+
     def publish(self, event):
-        # route events to logs by event type
         # ensure crud is legit (state machine is able to C/U/D)
         # Write to db
         pass
