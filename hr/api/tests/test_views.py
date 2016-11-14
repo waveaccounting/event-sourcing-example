@@ -51,6 +51,10 @@ class ExpenseAPIView(TestCase):
 
         self.assertEqual(201, response.status_code)
 
+    def test_put__bad_data(self):
+        response = self.post_payload({})
+        self.assertEqual(400, response.status_code)
+
     def test_put__does_not_have_previous_create(self):
         payload = {
             "amount": "150.0000",
@@ -61,4 +65,5 @@ class ExpenseAPIView(TestCase):
 
         response = self.put_payload(payload)
 
-        self.assertEqual(201, response.status_code)
+        self.assertEqual(400, response.status_code)
+
