@@ -8,7 +8,7 @@ class ExpenseAPIView(TestCase):
 
     def post_payload(self, payload):
         return self.c.post(
-            reverse("event_create"),
+            reverse("expense-api"),
             payload,
             content_type="application/json"
         )

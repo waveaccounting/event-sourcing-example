@@ -39,5 +39,5 @@ class ExpenseAPIView(APIView):
 
 
 class MonthlyExpenseReportAPIView(APIView):
-    def get(self, request, format=None):
+    def get(self, request):
         pass
