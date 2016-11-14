@@ -28,28 +28,21 @@ class ExpenseAPIViewTestCase(TestCase):
     def setUp(self):
         self.c = Client()
 
-    def post_payload(self, payload):
-        return self.c.post(
+    def _apply_payload_with_method(self, method, payload):
+        return getattr(self.c, method)(
             reverse("expense-api"),
             data=payload,
             content_type="application/json"
         )
+
+    def post_payload(self, payload):
+        return self._apply_payload_with_method("post", payload)
 
     def put_payload(self, payload):
-        # TODO clean up these test helper methods
-        return self.c.put(
-            reverse("expense-api"),
-            data=payload,
-            content_type="application/json"
-        )
+        return self._apply_payload_with_method("put", payload)
 
     def delete_payload(self, payload):
-        # TODO clean up these test helper methods
-        return self.c.delete(
-            reverse("expense-api"),
-            data=payload,
-            content_type="application/json"
-        )
+        return self._apply_payload_with_method("delete", payload)
 
     def test_post__simple_create(self):
         response = self.post_payload(create_expense_fixture)
