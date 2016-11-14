@@ -1,6 +1,20 @@
 from django.urls import reverse
 from django.test import TestCase, Client
 
+create_expense_fixture = {
+    "amount": "150.0000",
+    "date": "2016-11-14T12:34:56",
+    "name": "pycon ticket",
+    "sequence": 1,
+}
+
+update_expense_fixture = {
+    "amount": "150.0000",
+    "date": "2016-11-14T12:34:56",
+    "name": "pycon ticket",
+    "sequence": 2,
+}
+
 
 class ExpenseAPIView(TestCase):
     def setUp(self):
@@ -22,48 +36,26 @@ class ExpenseAPIView(TestCase):
         )
 
     def test_post__simple_create(self):
-        payload = {
-            "amount": "150.0000",
-            "date": "2016-11-14T12:34:56",
-            "name": "pycon ticket",
-            "sequence": 1,
-        }
-
-        response = self.post_payload(payload)
-
+        response = self.post_payload(create_expense_fixture)
         self.assertEqual(201, response.status_code)
 
     def test_post__bad_data(self):
         response = self.post_payload({})
         self.assertEqual(400, response.status_code)
 
-    def test_put__simple(self):
+    def test_put__simple_update(self):
         # TODO set up previous create record.
         self.fail("Need to have existing create record in the event log")
 
-        payload = {
-            "amount": "150.0000",
-            "date": "2016-11-14T12:34:56",
-            "name": "pycon ticket",
-            "sequence": 2,
-        }
-        response = self.put_payload(payload)
+        response = self.put_payload(update_expense_fixture)
 
         self.assertEqual(201, response.status_code)
 
     def test_put__bad_data(self):
-        response = self.post_payload({})
+        response = self.put_payload({})
         self.assertEqual(400, response.status_code)
 
     def test_put__does_not_have_previous_create(self):
-        payload = {
-            "amount": "150.0000",
-            "date": "2016-11-14T12:34:56",
-            "name": "pycon ticket",
-            "sequence": 2,
-        }
-
-        response = self.put_payload(payload)
-
+        response = self.put_payload(update_expense_fixture)
         self.assertEqual(400, response.status_code)
 
