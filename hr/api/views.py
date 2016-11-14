@@ -30,7 +30,8 @@ class ExpenseAPIView(APIView):
             return Response('You broke it', status=400)
 
         try:
-            EventLog.publish(event)
+            eventLog = EventLog('Expense')  # Make this something more smarter
+            eventLog.publish(event)
         except EventlogPreconditionFailure:
             return Response('You broke it', status=400)
 
