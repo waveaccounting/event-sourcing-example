@@ -2,40 +2,41 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import status
 
-from api.serializers import EventMethod, InvalidEvent, EventlogPreconditionFailure, EventLog, EventFactory, ExpenseValidator
+from api.validators import ExpenseValidator
+from event_source.exceptions import InvalidEvent, EventlogPreconditionFailure
+from event_source.constants import EventMethod
+from event_source.event_log import EventLog, EventFactory
+
 
 class ExpenseAPIView(APIView):
-    def dispatch(self, request):
-        if request.method == request.GET:
-            pass # TODO
+    def post(self, request):
+        self._crud(self, request, EventMethod.CREATE)
 
+    def put(self, request):
+        self._crud(self, request, EventMethod.UPDATE)
+
+    def delete(self, request):
+        self._crud(self, request, EventMethod.DELETE)
+
+    def get(self, request):
+        pass  # TODO
+
+    def _crud(self, request, method):
         sequence=request.data.sequence
 
         expenseEventFactory = EventFactory(ExpenseValidator)
 
         try:
-            event = expenseEventFactory(
-                sequence,
-                request.data,
-                self._getMethod(request.method)
-            )
+            event = expenseEventFactory(sequence, request.data, method)
         except InvalidEvent:
-            return Response(serialzer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response('You broke it', status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            eventlog.publish(event)
+            EventLog.publish(event)
         except EventlogPreconditionFailure:
-            return Response(serialzer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response('You broke it', status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(serialzer.data, status=status.HTTP_201_CREATED)
-
-    def _getMethod():
-        if request.method == request.POST:
-            return EventMethod.CREATE
-        if request.method == request.PUT:
-            return EventMethod.UPDATE
-        if request.method == request.DELETE:
-            return EventMethod.DELETE
+        return Response('Good job', status=status.HTTP_201_CREATED)
 
 
 class MonthlyReportAPIView(APIView):
