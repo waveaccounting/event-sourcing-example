@@ -15,6 +15,13 @@ update_expense_fixture = {
     "sequence": 2,
 }
 
+delete_expense_fixture = {
+    "amount": "150.0000",
+    "date": "2016-11-14T12:34:56",
+    "name": "pycon ticket",
+    "sequence": 2,
+}
+
 
 class ExpenseAPIView(TestCase):
     def setUp(self):
@@ -30,6 +37,14 @@ class ExpenseAPIView(TestCase):
     def put_payload(self, payload):
         # TODO clean up these test helper methods
         return self.c.put(
+            reverse("expense-api"),
+            data=payload,
+            content_type="application/json"
+        )
+
+    def delete_payload(self, payload):
+        # TODO clean up these test helper methods
+        return self.c.delete(
             reverse("expense-api"),
             data=payload,
             content_type="application/json"
@@ -59,3 +74,18 @@ class ExpenseAPIView(TestCase):
         response = self.put_payload(update_expense_fixture)
         self.assertEqual(400, response.status_code)
 
+    def test_delete__simple_delete(self):
+        # TODO set up previous create record.
+        self.fail("Need to have existing create record in the event log")
+
+        response = self.delete_payload(delete_expense_fixture)
+
+        self.assertEqual(400, response.status_code)
+
+    def test_delete__bad_data(self):
+        response = self.delete_payload({})
+        self.assertEqual(400, response.status_code)
+
+    def test_put__does_not_have_previous_create(self):
+        response = self.delete_payload(delete_expense_fixture)
+        self.assertEqual(400, response.status_code)
