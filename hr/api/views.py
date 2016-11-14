@@ -9,13 +9,13 @@ from event_source.event_log import EventLog, EventFactory
 
 class ExpenseAPIView(APIView):
     def post(self, request):
-        self._crud(self, request, EventMethod.CREATE)
+        self._crud(request, EventMethod.CREATE)
 
     def put(self, request):
-        self._crud(self, request, EventMethod.UPDATE)
+        self._crud(request, EventMethod.UPDATE)
 
     def delete(self, request):
-        self._crud(self, request, EventMethod.DELETE)
+        self._crud(request, EventMethod.DELETE)
 
     def get(self, request):
         pass  # TODO
