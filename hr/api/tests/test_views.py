@@ -23,7 +23,7 @@ delete_expense_fixture = {
     "date": "2016-11-14T12:34:56",
     "name": "pycon ticket",
     "sequence": 1,
-    "expense_id": "1aa9af27-af1b-4f20-9a8c-c13fe858c945",
+    "expense_id": "8e203294-9e1a-4cee-a908-54241b233f56",
 }
 
 
