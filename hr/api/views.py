@@ -2,7 +2,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from api.validators import ExpenseValidator
-from event_source.exceptions import EventlogPreconditionFailure
+from event_source.exceptions import (
+    InvalidEvent,
+    EventlogPreconditionFailure,
+)
 from event_source.event_log import EventLog, EventFactory
 from expense.backends import (
     ExpenseEventlogBackend,
@@ -17,14 +20,20 @@ from expense.services import (
 class ExpenseAPIView(APIView):
     def post(self, request):
         expense_event_factory = EventFactory(ExpenseValidator())
-        event = expense_event_factory.create(request.data)
+        try:
+            event = expense_event_factory.create(request.data)
+        except InvalidEvent:
+            return Response('You broke it', status=400)
         return self._crud(event)
 
     def put(self, request):
         sequence = request.data["sequence"]
         expense_id = request.data["expense_id"]
         expense_event_factory = EventFactory(ExpenseValidator())
-        event = expense_event_factory.update(expense_id, sequence, request.data)
+        try:
+            event = expense_event_factory.update(expense_id, sequence, request.data)
+        except InvalidEvent:
+            return Response('You broke it', status=400)
         return self._crud(event)
 
     def delete(self, request):
