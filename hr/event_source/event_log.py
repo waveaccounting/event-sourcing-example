@@ -29,11 +29,11 @@ class EventFactory(object):
         self.validator = validator
 
     def create(self, payload):
-        self.validator().validate(payload)
+        self.validator.validate(payload)
         return CreateEvent(payload)
 
     def update(self, entity_id, sequence, payload):
-        self.validator().validate(payload)
+        self.validator.validate(payload)
         return UpdateEvent(entity_id, sequence, payload)
 
     def delete(entity_id, sequence):

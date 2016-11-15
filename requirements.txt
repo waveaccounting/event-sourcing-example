@@ -1,3 +1,4 @@
 django==1.10.3
 djangorestframework==3.5.3
 six==1.10.0
+ipdb==0.10.1
