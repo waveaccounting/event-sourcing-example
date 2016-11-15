@@ -1,5 +1,6 @@
 import json
 from uuid import uuid4
+from event_source.exceptions import EventlogPreconditionFailure
 
 
 class ExpenseEventLogService(object):
@@ -15,10 +16,12 @@ class ExpenseEventLogService(object):
         self.expense_eventlog_backend.save_event_log(event_log_data_to_save)
 
     def save_update(self, event):
-        pass
+        if event.sequence != self.expense_eventlog_backend.get_latest_sequence(event.entity_id):
+            raise EventlogPreconditionFailure
 
     def save_delete(self, event):
-        pass
+        if event.sequence != self.expense_eventlog_backend.get_latest_sequence(event.entity_id):
+            raise EventlogPreconditionFailure
 
 
 class ExpenseAggregateService(object):

@@ -7,23 +7,23 @@ create_expense_fixture = {
     "amount": "150.0000",
     "date": "2016-11-14T12:34:56",
     "name": "pycon ticket",
-    "sequence": 1,
+    "sequence": 0,
 }
 
 update_expense_fixture = {
     "amount": "150.0000",
     "date": "2016-11-14T12:34:56",
     "name": "pycon ticket",
-    "sequence": 2,
-    "expense_id": 1,
+    "sequence": 1,
+    "expense_id": "8e203294-9e1a-4cee-a908-54241b233f56",
 }
 
 delete_expense_fixture = {
     "amount": "150.0000",
     "date": "2016-11-14T12:34:56",
     "name": "pycon ticket",
-    "sequence": 2,
-    "expense_id": 1,
+    "sequence": 1,
+    "expense_id": "1aa9af27-af1b-4f20-9a8c-c13fe858c945",
 }
 
 
@@ -33,12 +33,13 @@ class ExpenseAPIViewTestCase(TestCase):
         self.c = Client()
 
     def _apply_payload_with_method(self, method, payload):
-        return getattr(self.c, method)(
+        response = getattr(self.c, method)(
             reverse("expense-api"),
             data=json.dumps(payload),
             format="json",
             content_type="application/json"
         )
+        return response
 
     def post_payload(self, payload):
         return self._apply_payload_with_method("post", payload)

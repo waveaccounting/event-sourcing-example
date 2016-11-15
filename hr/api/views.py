@@ -62,8 +62,6 @@ class ExpenseAPIView(APIView):
         )
         return eventLog.publish(event)
 
-        return Response('Good job', status=201)
-
 
 class MonthlyExpenseReportAPIView(APIView):
     def get(self, request):
