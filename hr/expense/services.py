@@ -5,7 +5,7 @@ class ExpenseEventLogService(object):
     def __init__(self, expense_eventlog_backend):
         self.expense_eventlog_backend = expense_eventlog_backend
 
-    def create_expense(self, expense_data):
+    def create_event_log(self, expense_data):
         latest_sequence = self.get_latest_sequence(expense_data["expense_id"])
         if latest_sequence != expense_data["sequence"]:
             raise EventlogPreconditionFailure

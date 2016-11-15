@@ -43,6 +43,6 @@ class EventLog(object):
         self.aggregate_service = aggregate_service
 
     def publish(self, event):
-        saved_event_log = self.event_log_service.create_expense(event)
+        saved_event_log = self.event_log_service.create_event_log(event)
         self.aggregate_service.save_aggregate(event)
         return saved_event_log
