@@ -1,6 +1,7 @@
 from django.urls import reverse
 from django.test import TestCase, Client
 
+import json
 
 create_expense_fixture = {
     "amount": "150.0000",
@@ -14,6 +15,7 @@ update_expense_fixture = {
     "date": "2016-11-14T12:34:56",
     "name": "pycon ticket",
     "sequence": 2,
+    "expense_id": 1,
 }
 
 delete_expense_fixture = {
@@ -21,6 +23,7 @@ delete_expense_fixture = {
     "date": "2016-11-14T12:34:56",
     "name": "pycon ticket",
     "sequence": 2,
+    "expense_id": 1,
 }
 
 
@@ -32,8 +35,9 @@ class ExpenseAPIViewTestCase(TestCase):
     def _apply_payload_with_method(self, method, payload):
         return getattr(self.c, method)(
             reverse("expense-api"),
-            data=payload,
+            data=json.dumps(payload),
             format="json",
+            content_type="application/json"
         )
 
     def post_payload(self, payload):

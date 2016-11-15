@@ -27,20 +27,23 @@ class ExpenseAPIView(APIView):
         return self._crud(event)
 
     def put(self, request):
-        sequence = request.data["sequence"]
-        expense_id = request.data["expense_id"]
         expense_event_factory = EventFactory(ExpenseValidator())
         try:
+            sequence = request.data["sequence"]
+            expense_id = request.data["expense_id"]
             event = expense_event_factory.update(expense_id, sequence, request.data)
-        except InvalidEvent:
+        except (InvalidEvent, KeyError):
             return Response('You broke it', status=400)
         return self._crud(event)
 
     def delete(self, request):
-        sequence = request.data["sequence"]
-        expense_id = request.data["expense_id"]
         expense_event_factory = EventFactory(ExpenseValidator)
-        event = expense_event_factory.delete(expense_id, sequence)
+        try:
+            sequence = request.data["sequence"]
+            expense_id = request.data["expense_id"]
+            event = expense_event_factory.delete(expense_id, sequence)
+        except (InvalidEvent, KeyError):
+            return Response('You broke it', status=400)
         return self._crud(event)
 
     def get(self, request):
