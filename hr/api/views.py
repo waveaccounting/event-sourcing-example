@@ -5,7 +5,14 @@ from api.validators import ExpenseValidator
 from event_source.exceptions import InvalidEvent, EventlogPreconditionFailure
 from event_source.constants import EventMethod
 from event_source.event_log import EventLog, EventFactory
-from event_source.constants import EventLogType
+from expense.backends import (
+    ExpenseEventlogBackend,
+    ExpenseAggregateBackend,
+)
+from expense.services import (
+    ExpenseEventLogService,
+    ExpenseAggregateService,
+)
 
 
 class ExpenseAPIView(APIView):
@@ -31,7 +38,12 @@ class ExpenseAPIView(APIView):
             return Response('You broke it', status=400)
 
         try:
-            eventLog = EventLog(EventLogType.EXPENSE)  # Make this something more smarter
+            event_log_service = ExpenseEventLogService(ExpenseEventlogBackend())
+            aggregate_service = ExpenseAggregateService(ExpenseAggregateBackend())
+            eventLog = EventLog(
+                event_log_service=event_log_service,
+                aggregate_service=aggregate_service,
+            )
             eventLog.publish(event)
         except EventlogPreconditionFailure:
             return Response('You broke it', status=400)
