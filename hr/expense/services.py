@@ -12,7 +12,7 @@ class ExpenseEventLogService(object):
             "event_data": json.dumps(event.payload),
             "entity_id": uuid4(),
         }
-        self.expense_expense_log_backend.save_event_log(event_log_data_to_save)
+        self.expense_eventlog_backend.save_event_log(event_log_data_to_save)
 
 
 class ExpenseAggregateService(object):

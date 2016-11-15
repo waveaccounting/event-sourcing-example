@@ -46,11 +46,11 @@ class EventLog(object):
         self.aggregate_service = aggregate_service
 
     def publish(self, event):
-        if event is CreateEvent:
+        if isinstance(event, CreateEvent):
             saved_event_log = self.event_log_service.save_create(event)
-        elif event is UpdateEvent:
+        elif isinstance(event, UpdateEvent):
             saved_event_log = self.event_log_service.save_update(event)
-        elif event is DeleteEvent:
+        elif isinstance(event, DeleteEvent):
             saved_event_log = self.event_log_service.save_delete(event)
         else:
             raise InvalidEventType
