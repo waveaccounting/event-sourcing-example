@@ -15,6 +15,7 @@ update_expense_fixture = {
     "date": "2016-11-14T12:34:56",
     "name": "pycon ticket",
     "sequence": 2,
+    "expense_id": 1,
 }
 
 delete_expense_fixture = {
@@ -22,6 +23,7 @@ delete_expense_fixture = {
     "date": "2016-11-14T12:34:56",
     "name": "pycon ticket",
     "sequence": 2,
+    "expense_id": 1,
 }
 
 

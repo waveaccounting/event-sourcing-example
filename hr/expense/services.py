@@ -14,6 +14,12 @@ class ExpenseEventLogService(object):
         }
         self.expense_eventlog_backend.save_event_log(event_log_data_to_save)
 
+    def save_update(self, event):
+        pass
+
+    def save_delete(self, event):
+        pass
+
 
 class ExpenseAggregateService(object):
     def __init__(self, expense_aggregate_backend):
