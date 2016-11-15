@@ -1,5 +1,17 @@
+from event_source.constants import EventLogType
+from event_source.exceptions import InvalidEventLogType
+from expense.backends import (
+    ExpenseEventlogBackend,
+    ExpenseAggregateBackend,
+)
+from expense.services import (
+    ExpenseAggregateService,
+    ExpenseEventLogService,
+)
+
+
 class Event(object):
-    def __init__(self, sequence,  method, payload):
+    def __init__(self, sequence, method, payload):
         # TODO  validate these parameters are legit
         self.method = method
         self.payload = payload
@@ -16,10 +28,18 @@ class EventFactory(object):
 
 
 class EventLog(object):
-    def __init__(self, model):
-        self.model = model
+    def __init__(self, event_log_type):
+        self.event_log_type = event_log_type
 
     def publish(self, event):
+        # route events to logs by event type
         # ensure crud is legit (state machine is able to C/U/D)
         # Write to db
-        pass
+
+        if self.event_log_type == EventLogType.EXPENSE:
+            event_log_service = ExpenseEventLogService(expense_eventlog_backend=ExpenseEventlogBackend())
+            aggregate_service = ExpenseAggregateService(expense_aggregate_backend=ExpenseAggregateBackend())
+            saved_event_log = event_log_service.create_expense(event)
+            aggregate_service.save_aggregate(event)
+            return saved_event_log
+        raise InvalidEventLogType
