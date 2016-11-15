@@ -18,21 +18,21 @@ class ExpenseAPIView(APIView):
     def post(self, request):
         expense_event_factory = EventFactory(ExpenseValidator)
         event = expense_event_factory.create(request.data)
-        return self._crud(request, event)
+        return self._crud(event)
 
     def put(self, request):
         sequence = request.data["sequence"]
         expense_id = request.data["expense_id"]
         expense_event_factory = EventFactory(ExpenseValidator)
         event = expense_event_factory.update(expense_id, sequence, request.data)
-        return self._crud(request, event)
+        return self._crud(event)
 
     def delete(self, request):
         sequence = request.data["sequence"]
         expense_id = request.data["expense_id"]
         expense_event_factory = EventFactory(ExpenseValidator)
         event = expense_event_factory.delete(expense_id, sequence)
-        return self._crud(request, event)
+        return self._crud(event)
 
     def get(self, request):
         pass  # TODO

@@ -1,3 +1,6 @@
+from event_source.exceptions import InvalidEventType
+
+
 class Event(object):
     pass
 
@@ -26,11 +29,11 @@ class EventFactory(object):
         self.validator = validator
 
     def create(self, payload):
-        self.validator.validate(payload)
+        self.validator().validate(payload)
         return CreateEvent(payload)
 
-    def update(self, event_id, sequence, payload):
-        self.validator.validate(payload)
+    def update(self, entity_id, sequence, payload):
+        self.validator().validate(payload)
         return UpdateEvent(entity_id, sequence, payload)
 
     def delete(entity_id, sequence):
@@ -43,6 +46,13 @@ class EventLog(object):
         self.aggregate_service = aggregate_service
 
     def publish(self, event):
-        saved_event_log = self.event_log_service.create_event_log(event)
-        self.aggregate_service.save_aggregate(event)
+        if event is CreateEvent:
+            saved_event_log = self.event_log_service.save_create(event)
+        elif event is UpdateEvent:
+            saved_event_log = self.event_log_service.save_update(event)
+        elif event is DeleteEvent:
+            saved_event_log = self.event_log_service.save_delete(event)
+        else:
+            raise InvalidEventType
+        self.aggregate_service.save_aggregate(saved_event_log)
         return saved_event_log

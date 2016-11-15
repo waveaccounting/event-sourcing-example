@@ -1,15 +1,18 @@
-from event_source.exceptions import EventlogPreconditionFailure
+import json
+from uuid import uuid4
 
 
 class ExpenseEventLogService(object):
     def __init__(self, expense_eventlog_backend):
         self.expense_eventlog_backend = expense_eventlog_backend
 
-    def create_event_log(self, expense_data):
-        latest_sequence = self.get_latest_sequence(expense_data["expense_id"])
-        if latest_sequence != expense_data["sequence"]:
-            raise EventlogPreconditionFailure
-        self.expense_expense_log_backend.save_event_log(expense_data)
+    def save_create(self, event):
+        event_log_data_to_save = {
+            "sequence": 1,
+            "event_data": json.dumps(event.payload),
+            "entity_id": uuid4(),
+        }
+        self.expense_expense_log_backend.save_event_log(event_log_data_to_save)
 
 
 class ExpenseAggregateService(object):
