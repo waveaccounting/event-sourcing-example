@@ -22,9 +22,10 @@ class ExpenseAPIView(APIView):
         expense_event_factory = EventFactory(ExpenseValidator())
         try:
             event = expense_event_factory.create(request.data)
-        except InvalidEvent:
+            result = self._crud(event)
+        except (InvalidEvent, EventlogPreconditionFailure):
             return Response('You broke it', status=400)
-        return self._crud(event)
+        return Response(result, status=201)
 
     def put(self, request):
         expense_event_factory = EventFactory(ExpenseValidator())
@@ -32,34 +33,34 @@ class ExpenseAPIView(APIView):
             sequence = request.data["sequence"]
             expense_id = request.data["expense_id"]
             event = expense_event_factory.update(expense_id, sequence, request.data)
-        except (InvalidEvent, KeyError):
+            self._crud(event)
+        except (InvalidEvent, EventlogPreconditionFailure, KeyError):
             return Response('You broke it', status=400)
-        return self._crud(event)
+        return Response(status=204)
 
     def delete(self, request):
         expense_event_factory = EventFactory(ExpenseValidator)
+
         try:
             sequence = request.data["sequence"]
             expense_id = request.data["expense_id"]
             event = expense_event_factory.delete(expense_id, sequence)
-        except (InvalidEvent, KeyError):
+            self._crud(event)
+        except (InvalidEvent, EventlogPreconditionFailure, KeyError):
             return Response('You broke it', status=400)
-        return self._crud(event)
+        return Response(status=204)
 
     def get(self, request):
         pass  # TODO
 
     def _crud(self, event):
-        try:
-            event_log_service = ExpenseEventLogService(ExpenseEventlogBackend())
-            aggregate_service = ExpenseAggregateService(ExpenseAggregateBackend())
-            eventLog = EventLog(
-                event_log_service=event_log_service,
-                aggregate_service=aggregate_service,
-            )
-            eventLog.publish(event)
-        except EventlogPreconditionFailure:
-            return Response('You broke it', status=400)
+        event_log_service = ExpenseEventLogService(ExpenseEventlogBackend())
+        aggregate_service = ExpenseAggregateService(ExpenseAggregateBackend())
+        eventLog = EventLog(
+            event_log_service=event_log_service,
+            aggregate_service=aggregate_service,
+        )
+        return eventLog.publish(event)
 
         return Response('Good job', status=201)
 

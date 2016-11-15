@@ -68,7 +68,7 @@ class ExpenseAPIViewTestCase(TestCase):
 
         response = self.put_payload(update_expense_fixture)
 
-        self.assertEqual(201, response.status_code)
+        self.assertEqual(204, response.status_code)
 
     def test_put__bad_data(self):
         response = self.put_payload({})
@@ -83,7 +83,7 @@ class ExpenseAPIViewTestCase(TestCase):
 
         response = self.delete_payload(delete_expense_fixture)
 
-        self.assertEqual(400, response.status_code)
+        self.assertEqual(204, response.status_code)
 
     def test_delete__bad_data(self):
         response = self.delete_payload({})
