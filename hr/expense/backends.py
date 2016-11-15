@@ -1,12 +1,13 @@
+from expense.models import ExpenseEventLog
+
+
 class ExpenseEventlogBackend(object):
-    def save_event_log(self, expense_data_validator):
-        '''
-        Use Django ORM to persist data
-        '''
-        pass
+    def save_event_log(self, expense_event_data):
+        saved_event_log = ExpenseEventLog.objects.create(**expense_event_data)
+        return saved_event_log
 
     def get_latest_sequence(self, expense_id):
-        pass
+        return 0
 
 
 class ExpenseAggregateBackend(object):

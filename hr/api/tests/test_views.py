@@ -1,8 +1,6 @@
 from django.urls import reverse
 from django.test import TestCase, Client
 
-import json
-
 
 create_expense_fixture = {
     "amount": "150.0000",
