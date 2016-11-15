@@ -21,11 +21,11 @@ class ExpenseAPIView(APIView):
         pass  # TODO
 
     def _crud(self, request, method):
-        sequence = request.data.sequence
 
         expense_event_factory = EventFactory(ExpenseValidator)
 
         try:
+            sequence = request.data["sequence"]
             event = expense_event_factory(sequence, request.data, method)
         except (KeyError, InvalidEvent):
             return Response('You broke it', status=400)

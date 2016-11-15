@@ -4,3 +4,7 @@ class InvalidEvent(Exception):
 
 class EventlogPreconditionFailure(Exception):
     pass
+
+
+class InvalidEventLogType(Exception):
+    pass

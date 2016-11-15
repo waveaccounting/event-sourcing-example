@@ -1,4 +1,5 @@
 from event_source.constants import EventLogType
+from event_source.exceptions import InvalidEventLogType
 from expense.backends import (
     ExpenseEventlogBackend,
     ExpenseAggregateBackend,
@@ -10,10 +11,9 @@ from expense.services import (
 
 
 class Event(object):
-    def __init__(self, sequence, method, payload, modelName):
+    def __init__(self, sequence, method, payload):
         # TODO  validate these parameters are legit
         self.method = method
-        self.modelName = modelName
         self.payload = payload
         self.sequence = sequence
 
@@ -42,4 +42,4 @@ class EventLog(object):
             saved_event_log = event_log_service.create_expense(event)
             aggregate_service.save_aggregate(event)
             return saved_event_log
-        raise Exception("invalid event log type")
+        raise InvalidEventLogType
