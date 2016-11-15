@@ -21,7 +21,6 @@ class ExpenseAPIView(APIView):
         pass  # TODO
 
     def _crud(self, request, method):
-
         expense_event_factory = EventFactory(ExpenseValidator)
 
         try:
