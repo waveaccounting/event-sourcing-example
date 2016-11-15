@@ -36,7 +36,7 @@ class EventFactory(object):
         self.validator.validate(payload)
         return UpdateEvent(entity_id, sequence, payload)
 
-    def delete(entity_id, sequence):
+    def delete(self, entity_id, sequence):
         return DeleteEvent(entity_id, sequence)
 
 
