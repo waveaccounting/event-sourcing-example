@@ -1,6 +1,9 @@
 from django.urls import reverse
 from django.test import TestCase, Client
 
+import json
+
+
 create_expense_fixture = {
     "amount": "150.0000",
     "date": "2016-11-14T12:34:56",
@@ -32,7 +35,7 @@ class ExpenseAPIViewTestCase(TestCase):
         return getattr(self.c, method)(
             reverse("expense-api"),
             data=payload,
-            content_type="application/json"
+            format="json",
         )
 
     def post_payload(self, payload):

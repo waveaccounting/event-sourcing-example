@@ -11,10 +11,25 @@ from expense.services import (
 
 
 class Event(object):
-    def __init__(self, sequence, method, payload):
-        # TODO  validate these parameters are legit
-        self.method = method
+    pass
+
+
+class CreateEvent(Event):
+    def __init__(self, payload):
         self.payload = payload
+        self.sequence = 0
+
+
+class UpdateEvent(Event):
+    def __init__(self, entity_id, sequence, payload):
+        self.entity_id = entity_id
+        self.payload = payload
+        self.sequence = sequence
+
+
+class DeleteEvent(Event):
+    def __init__(self, entity_id, sequence):
+        self.entity_id = entity_id
         self.sequence = sequence
 
 
@@ -22,9 +37,16 @@ class EventFactory(object):
     def __init__(self, validator):
         self.validator = validator
 
-    def create(self, sequence, payload, method):
-        self.validator.validate(sequence, payload, method)
-        return Event(sequence, payload, method)
+    def create(self, payload):
+        self.validator.validate(payload)
+        return CreateEvent(payload)
+
+    def update(self, event_id, sequence, payload):
+        self.validator.validate(payload)
+        return UpdateEvent(entity_id, sequence, payload)
+
+    def delete(entity_id, sequence):
+        return DeleteEvent(entity_id, sequence)
 
 
 class EventLog(object):
