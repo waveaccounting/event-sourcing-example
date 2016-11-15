@@ -5,6 +5,7 @@ from api.validators import ExpenseValidator
 from event_source.exceptions import InvalidEvent, EventlogPreconditionFailure
 from event_source.constants import EventMethod
 from event_source.event_log import EventLog, EventFactory
+from event_source.constants import EventLogType
 
 
 class ExpenseAPIView(APIView):
@@ -21,16 +22,16 @@ class ExpenseAPIView(APIView):
         pass  # TODO
 
     def _crud(self, request, method):
-        expense_event_factory = EventFactory(ExpenseValidator)
+        expense_event_factory = EventFactory(ExpenseValidator())
 
         try:
             sequence = request.data["sequence"]
-            event = expense_event_factory(sequence, request.data, method)
+            event = expense_event_factory.create(sequence, request.data, method)
         except (KeyError, InvalidEvent):
             return Response('You broke it', status=400)
 
         try:
-            eventLog = EventLog('Expense')  # Make this something more smarter
+            eventLog = EventLog(EventLogType.EXPENSE)  # Make this something more smarter
             eventLog.publish(event)
         except EventlogPreconditionFailure:
             return Response('You broke it', status=400)
