@@ -7,7 +7,10 @@ class ExpenseEventlogBackend(object):
         return saved_event_log
 
     def get_latest_sequence(self, expense_id):
-        return 0
+        try:
+            return ExpenseEventLog.objects.filter(entity_id=expense_id).latest('sequence').sequence
+        except ExpenseEventLog.DoesNotExist:
+            return 0
 
 
 class ExpenseAggregateBackend(object):
